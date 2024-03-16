@@ -1,0 +1,12 @@
+---
+# tasks file for tailscale
+
+- name: Include install process
+  include_tasks: install.yml
+  tags: install tailscale
+  when: "'ts_agents' in group_names"
+
+- name: Include configure process
+  include_tasks: configure.yml
+  tags: configure tailscale
+  when: "'ts_agents' in group_names"

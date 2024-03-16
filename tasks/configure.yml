@@ -1,0 +1,36 @@
+---
+# Configure hosts for tailscale
+
+- name: Enable IP forwarding
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+    reload: true
+  with_items:
+    - { key: 'net.ipv4.ip_forward', value: 1 }
+    - { key: 'net.ipv4.conf.all.forwarding', value: 1 }
+    - { key: 'net.ipv6.conf.all.forwarding', value: 1 }
+  become: yes
+
+- name: Create /opt/tailscale directory
+  ansible.builtin.file:
+    path: /opt/tailscale
+    state: directory
+    mode: 0755
+  become: yes
+
+- name: Copy setup script
+  ansible.builtin.template:
+    src: opt/tailscale/up.sh
+    dest: /opt/tailscale/up.sh
+    mode: 0755
+  become: yes
+
+- name: Copy route list file
+  ansible.builtin.template:
+    src: opt/tailscale/routes.csv
+    dest: /opt/tailscale/routes.csv
+    mode: 0644
+  become: yes

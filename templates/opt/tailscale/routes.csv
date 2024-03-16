@@ -1,0 +1,4 @@
+{{ networks.private.range }}; LAN
+{% for host in groups['all'] %}{% if hostvars[host]['ansible_' + interfaces.public.name]['ipv4']['address'] != hostvars[inventory_hostname]['ansible_' + interfaces.public.name]['ipv4']['address'] %}
+{{ hostvars[host]['ansible_' + interfaces.public.name]['ipv4']['address'] }}/32; {{ host }}
+{% endif %}{% endfor %}
